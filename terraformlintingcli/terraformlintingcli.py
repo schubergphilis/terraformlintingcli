@@ -119,6 +119,20 @@ def get_arguments():
                         dest='positioning',
                         action=ReadableFile,
                         required=True)
+    parser.add_argument('-g',
+                        '--globals',
+                        metavar='global.tfvars',
+                        dest='globals',
+                        action=ReadableFile,
+                        required=False,
+                        default=None)
+    parser.add_argument('-s',
+                        '--skip-positioning-file',
+                        metavar='skip-positioning-check',
+                        dest='skip_positioning',
+                        action=ReadableFile,
+                        required=False,
+                        default=None)
     parser.add_argument('-s',
                         '--stack',
                         dest='stack',
@@ -172,7 +186,7 @@ def main():
         raise SystemExit(exc.message)
     setup_logging(args)
     try:
-        stack = Stack(args.stack, args.naming, args.positioning)
+        stack = Stack(args.stack, args.naming, args.positioning, args.globals, args.skip_positioning)
     except (InvalidNaming, InvalidPositioning):
         print(fore.RED + style.BOLD + 'Invalid file provided as argument' + style.RESET)  # pylint: disable=superfluous-parens,no-member
         raise SystemExit(1)
